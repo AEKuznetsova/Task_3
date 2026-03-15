@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class MainPage {
+    private static final String ACTIVE_TAB_CLASS = "tab_tab_type_current";
+
     private final WebDriver driver;
     private final By personalAccountButton = By.xpath("//a[@href='/account']");
     private final By loginButton = By.xpath(".//button[text()='Войти в аккаунт']");
@@ -50,12 +52,14 @@ public class MainPage {
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", tabElement);
 
         new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.attributeContains(tabLocator, "class", "tab_tab_type_current"));
+                .until(ExpectedConditions.attributeContains(tabLocator, "class", ACTIVE_TAB_CLASS));
     }
 
-    @Step("Получить class атрибут вкладки: {section}")
-    public String getClassName(SectionNames section) {
-        return driver.findElement(getSectionLocator(section)).getAttribute("class");
+    @Step("Проверка, что активна секция Конструктора: {section}")
+    public boolean isSectionActive(SectionNames section) {
+        return driver.findElement(getSectionLocator(section))
+                .getAttribute("class")
+                .contains(ACTIVE_TAB_CLASS);
     }
 
     private By getSectionLocator(SectionNames section) {

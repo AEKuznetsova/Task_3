@@ -65,10 +65,15 @@ public abstract class CommonTest {
         profilePage = new ProfilePage(driver);
         userClient = new UserClient();
 
-        if (!(this instanceof RegisterTest)) {
+        if (requiresAuthorizedUser()) {
             user = UserDataGenerator.generateValidUser();
             accessToken = userClient.create(user).extract().path("accessToken");
         }
+    }
+
+
+    protected boolean requiresAuthorizedUser() {
+        return true;
     }
 
     @Step("Открытие формы авторизации через: {source}")
